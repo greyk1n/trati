@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Учёт расходов — полный сайт</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="data:,">
+  <style>
+    /* Убираем стрелки у number */
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button{ -webkit-appearance: none; margin: 0; }
+    input[type=number]{ -moz-appearance: textfield; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+  <div class="max-w-6xl mx-auto p-4 sm:p-6">
+    <!-- Header -->
+    <header class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-bold">Учёт расходов</h1>
+        <p class="text-slate-600">Локальное хранение • фильтры • импорт/экспорт • редактирование</p>
+      </div>
+      <div class="flex gap-2">
+        <button id="exportCsvBtn" class="px-3 py-2 rounded-xl bg-white shadow border hover:bg-slate-50">Экспорт CSV</button>
+        <label class="px-3 py-2 rounded-xl bg-white shadow border hover:bg-slate-50 cursor-pointer">
+          Импорт CSV
+          <input id="importCsvInput" type="file" accept=".csv" class="hidden" />
+        </label>
+        <button id="resetAllBtn" class="px-3 py-2 rounded-xl bg-rose-600 text-white shadow hover:bg-rose-700">Сбросить всё</button>
+      </div>
+    </header>
+
+    <!-- Cards -->
+    <section class="grid sm:grid-cols-3 gap-3 mb-6">
+      <div class="bg-white rounded-2xl p-4 shadow border">
+        <div class="text-sm text-slate-500">Всего расходов (фильтр)</div>
+        <div class="mt-1 text-2xl font-bold" id="cardTotal">0 ?</div>
+        <div class="text-slate-500 text-sm" id="cardCount">0 записей</div>
+      </div>
+      <div class="bg-white rounded-2xl p-4 shadow border">
+        <div class="text-sm text-slate-500">За текущий месяц</div>
+        <div class="mt-1 text-2xl font-bold" id="cardMonth">0 ?</div>
+        <div class="text-slate-500 text-sm" id="cardTopCategory">Топ категория: —</div>
+      </div>
+      <div class="bg-white rounded-2xl p-4 shadow border">
+        <div class="text-sm text-slate-500">Сегодня</div>
+        <div class="mt-1 text-2xl font-bold" id="cardToday">0 ?</div>
+        <div class="text-slate-500 text-sm" id="cardAvg">Средний чек: —</div>
+      </div>
+    </section>
+
+    <!-- Форма -->
+    <section class="bg-white rounded-2xl p-4 shadow border mb-6">
+      <h2 class="text-xl font-semibold mb-3">Добавить расход</h2>
+      <form id="expenseForm" class="grid sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-sm text-slate-600 mb-1">Дата</label>
+          <input id="date" type="date" class="w-full rounded-xl border px-3 py-2" required />
+        </div>
+        <div>
+          <label class="block text-sm text-slate-600 mb-1">Категория</label>
+          <div class="flex flex-col gap-2">
+            <select id="category" class="w-full rounded-xl border px-3 py-2"></select>
+            <input id="customCategory" type="text" placeholder="Своя категория" class="w-full rounded-xl border px-3 py-2 hidden" />
+            <button type="button" id="addCatBtn" title="Сохранить новую категорию в список" class="px-3 py-2 rounded-xl border bg-slate-50 w-fit hidden">Добавить категорию в список</button>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm text-slate-600 mb-1">Сумма (?)</label>
+          <input id="amount" type="number" min="0" step="0.01" placeholder="0.00" class="w-full rounded-xl border px-3 py-2" required />
+        </div>
+        <div>
+          <label class="block text-sm text-slate-600 mb-1">Комментарий</label>
+          <input id="comment" type="text" placeholder="например: магазин" class="w-full rounded-xl border px-3 py-2" />
+        </div>
+        <div class="sm:col-span-2 flex gap-2 mt-1">
+          <button class="px-4 py-2 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700" id="saveBtn">Добавить</button>
+          <button type="reset" class="px-4 py-2 rounded-xl border bg-slate-50">Очистить</button>
+        </div>
+        <input type="hidden" id="editId" />
+      </form>
+    </section>
+
+    <!-- Фильтры -->
+    <section class="bg-white rounded-2xl p-4 shadow border mb-4">
+      <h3 class="text-lg font-semibold mb-3">Фильтры</h3>
+      <div class="grid md:grid-cols-5 gap-3">
+        <div>
+          <label class="block text-sm text-slate-600 mb-1">От</label>
+          <input id="fromDate" type="date" class="w-full rounded-xl border px-3 py-2" />
+        </div>
+        <div>
+          <label class="block text-sm text-slate-600 mb-1">До</label>
+          <input id="toDate" type="date" class="w-full rounded-xl border px-3 py-2" />
+        </div>
+        <div>
+          <label class="block text-sm text-slate-600 mb-1">Категория</label>
+          <select id="filterCategory" class="w-full rounded-xl border px-3 py-2"></select>
+        </div>
+        <div>
+          <label class="block text-sm text-slate-600 mb-1">Поиск</label>
+          <input id="search" type="text" placeholder="комментарий" class="w-full rounded-xl border px-3 py-2" />
+        </div>
+        <div class="flex items-end gap-2">
+          <button id="applyFilters" class="w-full px-4 py-2 rounded-xl bg-slate-800 text-white hover:bg-black">Применить</button>
+          <button id="clearFilters" class="px-4 py-2 rounded-xl border bg-slate-50">Сброс</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Таблица -->
+    <section class="bg-white rounded-2xl p-2 sm:p-4 shadow border">
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="text-left border-b bg-slate-50">
+              <th class="p-2">Дата</th>
+              <th class="p-2">Категория</th>
+              <th class="p-2">Сумма</th>
+              <th class="p-2">Комментарий</th>
+              <th class="p-2 text-right">Действия</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div class="flex items-center justify-between mt-3 px-2">
+        <div class="text-slate-500 text-sm" id="tableInfo">Показано 0 записей</div>
+        <div class="flex gap-2">
+          <button id="prevPage" class="px-3 py-2 rounded-xl border bg-slate-50">Назад</button>
+          <span id="pageIndicator" class="px-2 py-2"></span>
+          <button id="nextPage" class="px-3 py-2 rounded-xl border bg-slate-50">Вперёд</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // ====== КОНСТАНТЫ И ХЕЛПЕРЫ ======
+    const LS_KEY = 'expenses_v2';
+    const LS_CATS = 'expense_categories_v2';
+    const defaultCategories = ['Еда','Транспорт','Развлечения','Коммуналка','Здоровье','Покупки','Прочее','Своя категория…'];
+
+    const el = (id) => document.getElementById(id);
+    const fmt = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 });
+
+    function todayIso(){
+      const d = new Date();
+      const tzOffset = d.getTimezoneOffset();
+      const local = new Date(d.getTime() - tzOffset * 60000);
+      return local.toISOString().slice(0,10);
+    }
+    function loadJSON(key, fallback){ try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch(e){ return fallback; } }
+    function saveJSON(key, value){ localStorage.setItem(key, JSON.stringify(value)); }
+    function uuid(){ return Math.random().toString(36).slice(2) + Date.now().toString(36); }
+    function within(date, from, to){ if(from && date < from) return false; if(to && date > to) return false; return true; }
+
+    // ====== СОСТОЯНИЕ ======
+    let expenses = loadJSON(LS_KEY, []);
+    let categories = loadJSON(LS_CATS, defaultCategories);
+    let filters = { from:'', to:'', category:'Все', search:'' };
+    const pagination = { page: 1, perPage: 10 };
+
+    // ====== ИНИЦИАЛИЗАЦИЯ UI ======
+    function initDateDefaults(){ el('date').value = todayIso(); }
+
+    function buildCategorySelects(){
+      const selects = [el('category'), el('filterCategory')];
+      for(const s of selects){ s.innerHTML = ''; }
+      // Основной селект
+      categories.forEach(c => el('category').append(new Option(c, c)));
+      // Фильтр
+      el('filterCategory').append(new Option('Все', 'Все'));
+      categories.filter(c=>c!== 'Своя категория…').forEach(c => el('filterCategory').append(new Option(c, c)));
+      toggleCustomCategory();
+    }
+
+    function toggleCustomCategory(){
+      const isCustom = el('category').value === 'Своя категория…';
+      el('customCategory').classList.toggle('hidden', !isCustom);
+      el('addCatBtn').classList.toggle('hidden', !isCustom);
+      if(isCustom) el('customCategory').focus();
+    }
+
+    function addNewCategoryToList(){
+      const name = (el('customCategory').value || '').trim();
+      if(!name) return alert('Введите название категории');
+      if(categories.includes(name)) return alert('Такая категория уже есть');
+      categories.splice(categories.length-1, 0, name); // перед "Своя категория…"
+      saveJSON(LS_CATS, categories);
+      buildCategorySelects();
+      el('category').value = name;
+      toggleCustomCategory();
+    }
+
+    // ====== CRUD ======
+    function addExpense(data){ expenses.push({ id: uuid(), ...data, createdAt: new Date().toISOString() }); saveJSON(LS_KEY, expenses); renderAll(); }
+    function updateExpense(id, patch){ const i = expenses.findIndex(x=>x.id===id); if(i===-1) return; expenses[i] = { ...expenses[i], ...patch }; saveJSON(LS_KEY, expenses); renderAll(); }
+    function deleteExpense(id){ if(!confirm('Удалить запись?')) return; expenses = expenses.filter(x=>x.id!==id); saveJSON(LS_KEY, expenses); renderAll(); }
+    function resetAll(){ if(!confirm('Полностью очистить все данные?')) return; localStorage.removeItem(LS_KEY); expenses = []; renderAll(); }
+
+    // ====== ФИЛЬТРЫ И АГРЕГАЦИИ ======
+    function applyCurrentFilters(list){
+      const { from, to, category, search } = filters;
+      const s = (search||'').toLowerCase();
+      return list.filter(e => (
+        within(e.date, from, to) &&
+        (category==='Все' || e.category===category) &&
+        (!s || (e.comment||'').toLowerCase().includes(s))
+      ));
+    }
+    function sum(list){ return list.reduce((acc, e)=>acc+Number(e.amount||0), 0); }
+    function groupByCategory(list){ const m=new Map(); for(const e of list){ m.set(e.category,(m.get(e.category)||0)+Number(e.amount)); } return Array.from(m, ([category,total])=>({category,total})); }
+    function monthRange(date){ const d=new Date(date); const y=d.getFullYear(); const m=d.getMonth(); const from=new Date(y,m,1).toISOString().slice(0,10); const to=new Date(y,m+1,0).toISOString().slice(0,10); return {from, to}; }
+
+    // ====== РЕНДЕР ======
+    function renderCards(){
+      const filtered = applyCurrentFilters(expenses);
+      el('cardTotal').textContent = fmt.format(sum(filtered));
+      el('cardCount').textContent = `${filtered.length} записей`;
+
+      const today = todayIso();
+      el('cardToday').textContent = fmt.format(sum(expenses.filter(e=>e.date===today)));
+
+      const m = monthRange(today);
+      const monthList = expenses.filter(e=>within(e.date, m.from, m.to));
+      el('cardMonth').textContent = fmt.format(sum(monthList));
+
+      const grouped = groupByCategory(monthList).sort((a,b)=>b.total-a.total);
+      el('cardTopCategory').textContent = `Топ категория: ${grouped[0]?.category ?? '—'}`;
+
+      const avg = filtered.length ? sum(filtered)/filtered.length : 0;
+      el('cardAvg').textContent = filtered.length ? `${Math.round(avg).toLocaleString('ru-RU')} ?` : '—';
+    }
+
+    function renderTable(){
+      const list = applyCurrentFilters(expenses).sort((a,b)=> b.date.localeCompare(a.date) || b.createdAt.localeCompare(a.createdAt));
+      const start = (pagination.page-1)*pagination.perPage;
+      const pageItems = list.slice(start, start+pagination.perPage);
+      const tbody = el('tbody');
+      tbody.innerHTML = '';
+
+      for(const e of pageItems){
+        const tr = document.createElement('tr');
+        tr.className = 'border-b last:border-0';
+        tr.innerHTML = `
+          <td class="p-2 whitespace-nowrap">${e.date}</td>
+          <td class="p-2">${e.category}</td>
+          <td class="p-2 font-medium">${fmt.format(Number(e.amount))}</td>
+          <td class="p-2">${e.comment || ''}</td>
+          <td class="p-2 text-right">
+            <button class="px-2 py-1 rounded-lg border bg-slate-50 mr-2" data-edit="${e.id}">Редактировать</button>
+            <button class="px-2 py-1 rounded-lg border bg-rose-50 text-rose-700" data-del="${e.id}">Удалить</button>
+          </td>`;
+        tbody.appendChild(tr);
+      }
+
+      const total = list.length;
+      const from = total ? start+1 : 0;
+      const to = Math.min(start+pagination.perPage, total);
+      el('tableInfo').textContent = `Показано ${from}–${to} из ${total}`;
+
+      const totalPages = Math.max(1, Math.ceil(total / pagination.perPage));
+      if(pagination.page>totalPages) pagination.page = totalPages;
+      el('pageIndicator').textContent = `${pagination.page} / ${totalPages}`;
+
+      tbody.querySelectorAll('button[data-del]').forEach(btn=>btn.addEventListener('click', ()=>deleteExpense(btn.dataset.del)));
+      tbody.querySelectorAll('button[data-edit]').forEach(btn=>btn.addEventListener('click', ()=>startEdit(btn.dataset.edit)));
+    }
+
+    function startEdit(id){
+      const e = expenses.find(x=>x.id===id);
+      if(!e) return;
+      el('editId').value = id;
+      el('date').value = e.date;
+      if(!categories.includes(e.category)){
+        categories.splice(categories.length-1, 0, e.category);
+        saveJSON(LS_CATS, categories);
+        buildCategorySelects();
+      }
+      el('category').value = e.category;
+      toggleCustomCategory();
+      el('amount').value = e.amount;
+      el('comment').value = e.comment || '';
+      el('saveBtn').textContent = 'Сохранить изменения';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ====== CSV ======
+    function toCsv(list){
+      const header = ['date','category','amount','comment'];
+      const rows = list.map(e => [e.date, e.category, String(e.amount).replace('.',','), (e.comment||'').replaceAll('"','""')]);
+      const csv = [header.join(';')].concat(rows.map(r=>r.map(x=>`"${x}"`).join(';'))).join('\n');
+      return csv;
+    }
+    function download(filename, content, mime='text/plain;charset=utf-8'){
+      const blob = new Blob([content], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download=filename; a.click();
+      setTimeout(()=>URL.revokeObjectURL(url), 500);
+    }
+    function parseCsv(text){
+      const lines = text.split(/\r?\n/).filter(Boolean);
+      if(!lines.length) return [];
+      const out = [];
+      for(let i=1;i<lines.length;i++){
+        const row = [];
+        let cur=''; let inQ=false;
+        for(let j=0;j<lines[i].length;j++){
+          const ch=lines[i][j];
+          if(ch==='"'){
+            if(inQ && lines[i][j+1]==='"'){ cur+='"'; j++; }
+            else inQ=!inQ;
+          } else if(ch===';' && !inQ){ row.push(cur); cur=''; }
+          else { cur+=ch; }
+        }
+        row.push(cur);
+        const [date, category, amountStr, comment] = row;
+        const amount = Number(String(amountStr).replace(',', '.')) || 0;
+        out.push({ date, category, amount, comment });
+      }
+      return out;
+    }
+
+    // ====== СОБЫТИЯ ======
+    el('category').addEventListener('change', toggleCustomCategory);
+    el('addCatBtn').addEventListener('click', addNewCategoryToList);
+
+    el('expenseForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const date = el('date').value;
+      let category = el('category').value;
+      if(category === 'Своя категория…'){
+        category = (el('customCategory').value||'').trim() || 'Прочее';
+      }
+      const amount = Number(el('amount').value);
+      const comment = el('comment').value.trim();
+      const editId = el('editId').value;
+
+      if(editId){
+        updateExpense(editId, { date, category, amount, comment });
+        el('expenseForm').reset(); el('date').value=todayIso(); el('editId').value=''; el('saveBtn').textContent='Добавить';
+      } else {
+        addExpense({ date, category, amount, comment });
+        el('expenseForm').reset(); el('date').value=todayIso();
+      }
+    });
+
+    el('applyFilters').addEventListener('click', ()=>{
+      filters.from = el('fromDate').value;
+      filters.to = el('toDate').value;
+      filters.category = el('filterCategory').value || 'Все';
+      filters.search = el('search').value.trim();
+      pagination.page = 1; renderAll();
+    });
+    el('clearFilters').addEventListener('click', ()=>{
+      el('fromDate').value = ''; el('toDate').value = ''; el('filterCategory').value = 'Все'; el('search').value='';
+      filters = { from:'', to:'', category:'Все', search:'' }; pagination.page=1; renderAll();
+    });
+    el('prevPage').addEventListener('click', ()=>{ if(pagination.page>1){ pagination.page--; renderTable(); } });
+    el('nextPage').addEventListener('click', ()=>{ const total = applyCurrentFilters(expenses).length; const totalPages = Math.max(1, Math.ceil(total/pagination.perPage)); if(pagination.page<totalPages){ pagination.page++; renderTable(); } });
+
+    el('exportCsvBtn').addEventListener('click', ()=>{
+      const filtered = applyCurrentFilters(expenses);
+      download(`expenses_${new Date().toISOString().slice(0,10)}.csv`, toCsv(filtered), 'text/csv;charset=utf-8');
+    });
+    el('importCsvInput').addEventListener('change', async (e)=>{
+      const file = e.target.files?.[0]; if(!file) return; const text = await file.text(); const items = parseCsv(text);
+      if(!items.length) return alert('Не удалось прочитать CSV');
+      if(!confirm(`Импортировать ${items.length} записей?`)) return;
+      for(const it of items){ addExpense(it); }
+    });
+    el('resetAllBtn').addEventListener('click', resetAll);
+
+    // ====== РЕНДЕР ВСЕГО ======
+    function renderAll(){
+      buildCategorySelects();
+      renderCards();
+      renderTable();
+    }
+
+    // START
+    initDateDefaults();
+    buildCategorySelects();
+    renderAll();
+  </script>
+</body>
+</html>
