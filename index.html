@@ -1,19 +1,23 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="Content-Language" content="ru" />
+  <!-- Очень важно: meta charset должен идти как можно раньше -->
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Language" content="ru">
   <title>Учёт расходов — полный сайт</title>
-  <!-- Шрифты с поддержкой кириллицы -->
+
+  <!-- Шрифт с поддержкой кириллицы -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" href="data:,">
   <style>
-    html { font-family: 'Noto Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; }
+    html { font-family: 'Noto Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; }
     /* Убираем стрелки у number */
     input[type=number]::-webkit-outer-spin-button,
     input[type=number]::-webkit-inner-spin-button{ -webkit-appearance: none; margin: 0; }
@@ -316,7 +320,7 @@
       const csv = [header.join(';')].concat(rows.map(r=>r.map(x=>`"${x}"`).join(';'))).join('\n');
       return csv;
     }
-    function download(filename, content, mime='text/plain;charset=utf-8'){
+    function download(filename, content, mime='text/csv;charset=utf-8'){
       const bom = '\uFEFF'; // BOM для корректного открытия в Excel/Windows
       const blob = new Blob([bom, content], { type: mime });
       const url = URL.createObjectURL(blob);
