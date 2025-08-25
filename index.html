@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Учёт расходов — полный сайт</title>
+  <title>Г“Г·ВёГІ Г°Г Г±ГµГ®Г¤Г®Гў вЂ” ГЇГ®Г«Г­Г»Г© Г±Г Г©ГІ</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" href="data:,">
   <style>
-    /* Убираем стрелки у number */
+    /* Г“ГЎГЁГ°Г ГҐГ¬ Г±ГІГ°ГҐГ«ГЄГЁ Гі number */
     input[type=number]::-webkit-outer-spin-button,
     input[type=number]::-webkit-inner-spin-button{ -webkit-appearance: none; margin: 0; }
     input[type=number]{ -moz-appearance: textfield; }
@@ -19,129 +19,129 @@
     <!-- Header -->
     <header class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
       <div>
-        <h1 class="text-2xl sm:text-3xl font-bold">Учёт расходов</h1>
-        <p class="text-slate-600">Локальное хранение • фильтры • импорт/экспорт • редактирование</p>
+        <h1 class="text-2xl sm:text-3xl font-bold">Г“Г·ВёГІ Г°Г Г±ГµГ®Г¤Г®Гў</h1>
+        <p class="text-slate-600">Г‹Г®ГЄГ Г«ГјГ­Г®ГҐ ГµГ°Г Г­ГҐГ­ГЁГҐ вЂў ГґГЁГ«ГјГІГ°Г» вЂў ГЁГ¬ГЇГ®Г°ГІ/ГЅГЄГ±ГЇГ®Г°ГІ вЂў Г°ГҐГ¤Г ГЄГІГЁГ°Г®ГўГ Г­ГЁГҐ</p>
       </div>
       <div class="flex gap-2">
-        <button id="exportCsvBtn" class="px-3 py-2 rounded-xl bg-white shadow border hover:bg-slate-50">Экспорт CSV</button>
+        <button id="exportCsvBtn" class="px-3 py-2 rounded-xl bg-white shadow border hover:bg-slate-50">ГќГЄГ±ГЇГ®Г°ГІ CSV</button>
         <label class="px-3 py-2 rounded-xl bg-white shadow border hover:bg-slate-50 cursor-pointer">
-          Импорт CSV
+          Г€Г¬ГЇГ®Г°ГІ CSV
           <input id="importCsvInput" type="file" accept=".csv" class="hidden" />
         </label>
-        <button id="resetAllBtn" class="px-3 py-2 rounded-xl bg-rose-600 text-white shadow hover:bg-rose-700">Сбросить всё</button>
+        <button id="resetAllBtn" class="px-3 py-2 rounded-xl bg-rose-600 text-white shadow hover:bg-rose-700">Г‘ГЎГ°Г®Г±ГЁГІГј ГўГ±Вё</button>
       </div>
     </header>
 
     <!-- Cards -->
     <section class="grid sm:grid-cols-3 gap-3 mb-6">
       <div class="bg-white rounded-2xl p-4 shadow border">
-        <div class="text-sm text-slate-500">Всего расходов (фильтр)</div>
+        <div class="text-sm text-slate-500">Г‚Г±ГҐГЈГ® Г°Г Г±ГµГ®Г¤Г®Гў (ГґГЁГ«ГјГІГ°)</div>
         <div class="mt-1 text-2xl font-bold" id="cardTotal">0 ?</div>
-        <div class="text-slate-500 text-sm" id="cardCount">0 записей</div>
+        <div class="text-slate-500 text-sm" id="cardCount">0 Г§Г ГЇГЁГ±ГҐГ©</div>
       </div>
       <div class="bg-white rounded-2xl p-4 shadow border">
-        <div class="text-sm text-slate-500">За текущий месяц</div>
+        <div class="text-sm text-slate-500">Г‡Г  ГІГҐГЄГіГ№ГЁГ© Г¬ГҐГ±ГїГ¶</div>
         <div class="mt-1 text-2xl font-bold" id="cardMonth">0 ?</div>
-        <div class="text-slate-500 text-sm" id="cardTopCategory">Топ категория: —</div>
+        <div class="text-slate-500 text-sm" id="cardTopCategory">Г’Г®ГЇ ГЄГ ГІГҐГЈГ®Г°ГЁГї: вЂ”</div>
       </div>
       <div class="bg-white rounded-2xl p-4 shadow border">
-        <div class="text-sm text-slate-500">Сегодня</div>
+        <div class="text-sm text-slate-500">Г‘ГҐГЈГ®Г¤Г­Гї</div>
         <div class="mt-1 text-2xl font-bold" id="cardToday">0 ?</div>
-        <div class="text-slate-500 text-sm" id="cardAvg">Средний чек: —</div>
+        <div class="text-slate-500 text-sm" id="cardAvg">Г‘Г°ГҐГ¤Г­ГЁГ© Г·ГҐГЄ: вЂ”</div>
       </div>
     </section>
 
-    <!-- Форма -->
+    <!-- Г”Г®Г°Г¬Г  -->
     <section class="bg-white rounded-2xl p-4 shadow border mb-6">
-      <h2 class="text-xl font-semibold mb-3">Добавить расход</h2>
+      <h2 class="text-xl font-semibold mb-3">Г„Г®ГЎГ ГўГЁГІГј Г°Г Г±ГµГ®Г¤</h2>
       <form id="expenseForm" class="grid sm:grid-cols-2 gap-3">
         <div>
-          <label class="block text-sm text-slate-600 mb-1">Дата</label>
+          <label class="block text-sm text-slate-600 mb-1">Г„Г ГІГ </label>
           <input id="date" type="date" class="w-full rounded-xl border px-3 py-2" required />
         </div>
         <div>
-          <label class="block text-sm text-slate-600 mb-1">Категория</label>
+          <label class="block text-sm text-slate-600 mb-1">ГЉГ ГІГҐГЈГ®Г°ГЁГї</label>
           <div class="flex flex-col gap-2">
             <select id="category" class="w-full rounded-xl border px-3 py-2"></select>
-            <input id="customCategory" type="text" placeholder="Своя категория" class="w-full rounded-xl border px-3 py-2 hidden" />
-            <button type="button" id="addCatBtn" title="Сохранить новую категорию в список" class="px-3 py-2 rounded-xl border bg-slate-50 w-fit hidden">Добавить категорию в список</button>
+            <input id="customCategory" type="text" placeholder="Г‘ГўГ®Гї ГЄГ ГІГҐГЈГ®Г°ГЁГї" class="w-full rounded-xl border px-3 py-2 hidden" />
+            <button type="button" id="addCatBtn" title="Г‘Г®ГµГ°Г Г­ГЁГІГј Г­Г®ГўГіГѕ ГЄГ ГІГҐГЈГ®Г°ГЁГѕ Гў Г±ГЇГЁГ±Г®ГЄ" class="px-3 py-2 rounded-xl border bg-slate-50 w-fit hidden">Г„Г®ГЎГ ГўГЁГІГј ГЄГ ГІГҐГЈГ®Г°ГЁГѕ Гў Г±ГЇГЁГ±Г®ГЄ</button>
           </div>
         </div>
         <div>
-          <label class="block text-sm text-slate-600 mb-1">Сумма (?)</label>
+          <label class="block text-sm text-slate-600 mb-1">Г‘ГіГ¬Г¬Г  (?)</label>
           <input id="amount" type="number" min="0" step="0.01" placeholder="0.00" class="w-full rounded-xl border px-3 py-2" required />
         </div>
         <div>
-          <label class="block text-sm text-slate-600 mb-1">Комментарий</label>
-          <input id="comment" type="text" placeholder="например: магазин" class="w-full rounded-xl border px-3 py-2" />
+          <label class="block text-sm text-slate-600 mb-1">ГЉГ®Г¬Г¬ГҐГ­ГІГ Г°ГЁГ©</label>
+          <input id="comment" type="text" placeholder="Г­Г ГЇГ°ГЁГ¬ГҐГ°: Г¬Г ГЈГ Г§ГЁГ­" class="w-full rounded-xl border px-3 py-2" />
         </div>
         <div class="sm:col-span-2 flex gap-2 mt-1">
-          <button class="px-4 py-2 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700" id="saveBtn">Добавить</button>
-          <button type="reset" class="px-4 py-2 rounded-xl border bg-slate-50">Очистить</button>
+          <button class="px-4 py-2 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700" id="saveBtn">Г„Г®ГЎГ ГўГЁГІГј</button>
+          <button type="reset" class="px-4 py-2 rounded-xl border bg-slate-50">ГЋГ·ГЁГ±ГІГЁГІГј</button>
         </div>
         <input type="hidden" id="editId" />
       </form>
     </section>
 
-    <!-- Фильтры -->
+    <!-- Г”ГЁГ«ГјГІГ°Г» -->
     <section class="bg-white rounded-2xl p-4 shadow border mb-4">
-      <h3 class="text-lg font-semibold mb-3">Фильтры</h3>
+      <h3 class="text-lg font-semibold mb-3">Г”ГЁГ«ГјГІГ°Г»</h3>
       <div class="grid md:grid-cols-5 gap-3">
         <div>
-          <label class="block text-sm text-slate-600 mb-1">От</label>
+          <label class="block text-sm text-slate-600 mb-1">ГЋГІ</label>
           <input id="fromDate" type="date" class="w-full rounded-xl border px-3 py-2" />
         </div>
         <div>
-          <label class="block text-sm text-slate-600 mb-1">До</label>
+          <label class="block text-sm text-slate-600 mb-1">Г„Г®</label>
           <input id="toDate" type="date" class="w-full rounded-xl border px-3 py-2" />
         </div>
         <div>
-          <label class="block text-sm text-slate-600 mb-1">Категория</label>
+          <label class="block text-sm text-slate-600 mb-1">ГЉГ ГІГҐГЈГ®Г°ГЁГї</label>
           <select id="filterCategory" class="w-full rounded-xl border px-3 py-2"></select>
         </div>
         <div>
-          <label class="block text-sm text-slate-600 mb-1">Поиск</label>
-          <input id="search" type="text" placeholder="комментарий" class="w-full rounded-xl border px-3 py-2" />
+          <label class="block text-sm text-slate-600 mb-1">ГЏГ®ГЁГ±ГЄ</label>
+          <input id="search" type="text" placeholder="ГЄГ®Г¬Г¬ГҐГ­ГІГ Г°ГЁГ©" class="w-full rounded-xl border px-3 py-2" />
         </div>
         <div class="flex items-end gap-2">
-          <button id="applyFilters" class="w-full px-4 py-2 rounded-xl bg-slate-800 text-white hover:bg-black">Применить</button>
-          <button id="clearFilters" class="px-4 py-2 rounded-xl border bg-slate-50">Сброс</button>
+          <button id="applyFilters" class="w-full px-4 py-2 rounded-xl bg-slate-800 text-white hover:bg-black">ГЏГ°ГЁГ¬ГҐГ­ГЁГІГј</button>
+          <button id="clearFilters" class="px-4 py-2 rounded-xl border bg-slate-50">Г‘ГЎГ°Г®Г±</button>
         </div>
       </div>
     </section>
 
-    <!-- Таблица -->
+    <!-- Г’Г ГЎГ«ГЁГ¶Г  -->
     <section class="bg-white rounded-2xl p-2 sm:p-4 shadow border">
       <div class="overflow-x-auto">
         <table class="min-w-full text-sm">
           <thead>
             <tr class="text-left border-b bg-slate-50">
-              <th class="p-2">Дата</th>
-              <th class="p-2">Категория</th>
-              <th class="p-2">Сумма</th>
-              <th class="p-2">Комментарий</th>
-              <th class="p-2 text-right">Действия</th>
+              <th class="p-2">Г„Г ГІГ </th>
+              <th class="p-2">ГЉГ ГІГҐГЈГ®Г°ГЁГї</th>
+              <th class="p-2">Г‘ГіГ¬Г¬Г </th>
+              <th class="p-2">ГЉГ®Г¬Г¬ГҐГ­ГІГ Г°ГЁГ©</th>
+              <th class="p-2 text-right">Г„ГҐГ©Г±ГІГўГЁГї</th>
             </tr>
           </thead>
           <tbody id="tbody"></tbody>
         </table>
       </div>
       <div class="flex items-center justify-between mt-3 px-2">
-        <div class="text-slate-500 text-sm" id="tableInfo">Показано 0 записей</div>
+        <div class="text-slate-500 text-sm" id="tableInfo">ГЏГ®ГЄГ Г§Г Г­Г® 0 Г§Г ГЇГЁГ±ГҐГ©</div>
         <div class="flex gap-2">
-          <button id="prevPage" class="px-3 py-2 rounded-xl border bg-slate-50">Назад</button>
+          <button id="prevPage" class="px-3 py-2 rounded-xl border bg-slate-50">ГЌГ Г§Г Г¤</button>
           <span id="pageIndicator" class="px-2 py-2"></span>
-          <button id="nextPage" class="px-3 py-2 rounded-xl border bg-slate-50">Вперёд</button>
+          <button id="nextPage" class="px-3 py-2 rounded-xl border bg-slate-50">Г‚ГЇГҐГ°ВёГ¤</button>
         </div>
       </div>
     </section>
   </div>
 
   <script>
-    // ====== КОНСТАНТЫ И ХЕЛПЕРЫ ======
+    // ====== ГЉГЋГЌГ‘Г’ГЂГЌГ’Г› Г€ Г•Г…Г‹ГЏГ…ГђГ› ======
     const LS_KEY = 'expenses_v2';
     const LS_CATS = 'expense_categories_v2';
-    const defaultCategories = ['Еда','Транспорт','Развлечения','Коммуналка','Здоровье','Покупки','Прочее','Своя категория…'];
+    const defaultCategories = ['Г…Г¤Г ','Г’Г°Г Г­Г±ГЇГ®Г°ГІ','ГђГ Г§ГўГ«ГҐГ·ГҐГ­ГЁГї','ГЉГ®Г¬Г¬ГіГ­Г Г«ГЄГ ','Г‡Г¤Г®Г°Г®ГўГјГҐ','ГЏГ®ГЄГіГЇГЄГЁ','ГЏГ°Г®Г·ГҐГҐ','Г‘ГўГ®Гї ГЄГ ГІГҐГЈГ®Г°ГЁГївЂ¦'];
 
     const el = (id) => document.getElementById(id);
     const fmt = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 });
@@ -157,28 +157,28 @@
     function uuid(){ return Math.random().toString(36).slice(2) + Date.now().toString(36); }
     function within(date, from, to){ if(from && date < from) return false; if(to && date > to) return false; return true; }
 
-    // ====== СОСТОЯНИЕ ======
+    // ====== Г‘ГЋГ‘Г’ГЋГџГЌГ€Г… ======
     let expenses = loadJSON(LS_KEY, []);
     let categories = loadJSON(LS_CATS, defaultCategories);
-    let filters = { from:'', to:'', category:'Все', search:'' };
+    let filters = { from:'', to:'', category:'Г‚Г±ГҐ', search:'' };
     const pagination = { page: 1, perPage: 10 };
 
-    // ====== ИНИЦИАЛИЗАЦИЯ UI ======
+    // ====== Г€ГЌГ€Г–Г€ГЂГ‹Г€Г‡ГЂГ–Г€Гџ UI ======
     function initDateDefaults(){ el('date').value = todayIso(); }
 
     function buildCategorySelects(){
       const selects = [el('category'), el('filterCategory')];
       for(const s of selects){ s.innerHTML = ''; }
-      // Основной селект
+      // ГЋГ±Г­Г®ГўГ­Г®Г© Г±ГҐГ«ГҐГЄГІ
       categories.forEach(c => el('category').append(new Option(c, c)));
-      // Фильтр
-      el('filterCategory').append(new Option('Все', 'Все'));
-      categories.filter(c=>c!== 'Своя категория…').forEach(c => el('filterCategory').append(new Option(c, c)));
+      // Г”ГЁГ«ГјГІГ°
+      el('filterCategory').append(new Option('Г‚Г±ГҐ', 'Г‚Г±ГҐ'));
+      categories.filter(c=>c!== 'Г‘ГўГ®Гї ГЄГ ГІГҐГЈГ®Г°ГЁГївЂ¦').forEach(c => el('filterCategory').append(new Option(c, c)));
       toggleCustomCategory();
     }
 
     function toggleCustomCategory(){
-      const isCustom = el('category').value === 'Своя категория…';
+      const isCustom = el('category').value === 'Г‘ГўГ®Гї ГЄГ ГІГҐГЈГ®Г°ГЁГївЂ¦';
       el('customCategory').classList.toggle('hidden', !isCustom);
       el('addCatBtn').classList.toggle('hidden', !isCustom);
       if(isCustom) el('customCategory').focus();
@@ -186,9 +186,9 @@
 
     function addNewCategoryToList(){
       const name = (el('customCategory').value || '').trim();
-      if(!name) return alert('Введите название категории');
-      if(categories.includes(name)) return alert('Такая категория уже есть');
-      categories.splice(categories.length-1, 0, name); // перед "Своя категория…"
+      if(!name) return alert('Г‚ГўГҐГ¤ГЁГІГҐ Г­Г Г§ГўГ Г­ГЁГҐ ГЄГ ГІГҐГЈГ®Г°ГЁГЁ');
+      if(categories.includes(name)) return alert('Г’Г ГЄГ Гї ГЄГ ГІГҐГЈГ®Г°ГЁГї ГіГ¦ГҐ ГҐГ±ГІГј');
+      categories.splice(categories.length-1, 0, name); // ГЇГҐГ°ГҐГ¤ "Г‘ГўГ®Гї ГЄГ ГІГҐГЈГ®Г°ГЁГївЂ¦"
       saveJSON(LS_CATS, categories);
       buildCategorySelects();
       el('category').value = name;
@@ -198,16 +198,16 @@
     // ====== CRUD ======
     function addExpense(data){ expenses.push({ id: uuid(), ...data, createdAt: new Date().toISOString() }); saveJSON(LS_KEY, expenses); renderAll(); }
     function updateExpense(id, patch){ const i = expenses.findIndex(x=>x.id===id); if(i===-1) return; expenses[i] = { ...expenses[i], ...patch }; saveJSON(LS_KEY, expenses); renderAll(); }
-    function deleteExpense(id){ if(!confirm('Удалить запись?')) return; expenses = expenses.filter(x=>x.id!==id); saveJSON(LS_KEY, expenses); renderAll(); }
-    function resetAll(){ if(!confirm('Полностью очистить все данные?')) return; localStorage.removeItem(LS_KEY); expenses = []; renderAll(); }
+    function deleteExpense(id){ if(!confirm('Г“Г¤Г Г«ГЁГІГј Г§Г ГЇГЁГ±Гј?')) return; expenses = expenses.filter(x=>x.id!==id); saveJSON(LS_KEY, expenses); renderAll(); }
+    function resetAll(){ if(!confirm('ГЏГ®Г«Г­Г®Г±ГІГјГѕ Г®Г·ГЁГ±ГІГЁГІГј ГўГ±ГҐ Г¤Г Г­Г­Г»ГҐ?')) return; localStorage.removeItem(LS_KEY); expenses = []; renderAll(); }
 
-    // ====== ФИЛЬТРЫ И АГРЕГАЦИИ ======
+    // ====== Г”Г€Г‹ГњГ’ГђГ› Г€ ГЂГѓГђГ…ГѓГЂГ–Г€Г€ ======
     function applyCurrentFilters(list){
       const { from, to, category, search } = filters;
       const s = (search||'').toLowerCase();
       return list.filter(e => (
         within(e.date, from, to) &&
-        (category==='Все' || e.category===category) &&
+        (category==='Г‚Г±ГҐ' || e.category===category) &&
         (!s || (e.comment||'').toLowerCase().includes(s))
       ));
     }
@@ -215,11 +215,11 @@
     function groupByCategory(list){ const m=new Map(); for(const e of list){ m.set(e.category,(m.get(e.category)||0)+Number(e.amount)); } return Array.from(m, ([category,total])=>({category,total})); }
     function monthRange(date){ const d=new Date(date); const y=d.getFullYear(); const m=d.getMonth(); const from=new Date(y,m,1).toISOString().slice(0,10); const to=new Date(y,m+1,0).toISOString().slice(0,10); return {from, to}; }
 
-    // ====== РЕНДЕР ======
+    // ====== ГђГ…ГЌГ„Г…Гђ ======
     function renderCards(){
       const filtered = applyCurrentFilters(expenses);
       el('cardTotal').textContent = fmt.format(sum(filtered));
-      el('cardCount').textContent = `${filtered.length} записей`;
+      el('cardCount').textContent = `${filtered.length} Г§Г ГЇГЁГ±ГҐГ©`;
 
       const today = todayIso();
       el('cardToday').textContent = fmt.format(sum(expenses.filter(e=>e.date===today)));
@@ -229,10 +229,10 @@
       el('cardMonth').textContent = fmt.format(sum(monthList));
 
       const grouped = groupByCategory(monthList).sort((a,b)=>b.total-a.total);
-      el('cardTopCategory').textContent = `Топ категория: ${grouped[0]?.category ?? '—'}`;
+      el('cardTopCategory').textContent = `Г’Г®ГЇ ГЄГ ГІГҐГЈГ®Г°ГЁГї: ${grouped[0]?.category ?? 'вЂ”'}`;
 
       const avg = filtered.length ? sum(filtered)/filtered.length : 0;
-      el('cardAvg').textContent = filtered.length ? `${Math.round(avg).toLocaleString('ru-RU')} ?` : '—';
+      el('cardAvg').textContent = filtered.length ? `${Math.round(avg).toLocaleString('ru-RU')} ?` : 'вЂ”';
     }
 
     function renderTable(){
@@ -251,8 +251,8 @@
           <td class="p-2 font-medium">${fmt.format(Number(e.amount))}</td>
           <td class="p-2">${e.comment || ''}</td>
           <td class="p-2 text-right">
-            <button class="px-2 py-1 rounded-lg border bg-slate-50 mr-2" data-edit="${e.id}">Редактировать</button>
-            <button class="px-2 py-1 rounded-lg border bg-rose-50 text-rose-700" data-del="${e.id}">Удалить</button>
+            <button class="px-2 py-1 rounded-lg border bg-slate-50 mr-2" data-edit="${e.id}">ГђГҐГ¤Г ГЄГІГЁГ°Г®ГўГ ГІГј</button>
+            <button class="px-2 py-1 rounded-lg border bg-rose-50 text-rose-700" data-del="${e.id}">Г“Г¤Г Г«ГЁГІГј</button>
           </td>`;
         tbody.appendChild(tr);
       }
@@ -260,7 +260,7 @@
       const total = list.length;
       const from = total ? start+1 : 0;
       const to = Math.min(start+pagination.perPage, total);
-      el('tableInfo').textContent = `Показано ${from}–${to} из ${total}`;
+      el('tableInfo').textContent = `ГЏГ®ГЄГ Г§Г Г­Г® ${from}вЂ“${to} ГЁГ§ ${total}`;
 
       const totalPages = Math.max(1, Math.ceil(total / pagination.perPage));
       if(pagination.page>totalPages) pagination.page = totalPages;
@@ -284,7 +284,7 @@
       toggleCustomCategory();
       el('amount').value = e.amount;
       el('comment').value = e.comment || '';
-      el('saveBtn').textContent = 'Сохранить изменения';
+      el('saveBtn').textContent = 'Г‘Г®ГµГ°Г Г­ГЁГІГј ГЁГ§Г¬ГҐГ­ГҐГ­ГЁГї';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -324,7 +324,7 @@
       return out;
     }
 
-    // ====== СОБЫТИЯ ======
+    // ====== Г‘ГЋГЃГ›Г’Г€Гџ ======
     el('category').addEventListener('change', toggleCustomCategory);
     el('addCatBtn').addEventListener('click', addNewCategoryToList);
 
@@ -332,8 +332,8 @@
       e.preventDefault();
       const date = el('date').value;
       let category = el('category').value;
-      if(category === 'Своя категория…'){
-        category = (el('customCategory').value||'').trim() || 'Прочее';
+      if(category === 'Г‘ГўГ®Гї ГЄГ ГІГҐГЈГ®Г°ГЁГївЂ¦'){
+        category = (el('customCategory').value||'').trim() || 'ГЏГ°Г®Г·ГҐГҐ';
       }
       const amount = Number(el('amount').value);
       const comment = el('comment').value.trim();
@@ -341,7 +341,7 @@
 
       if(editId){
         updateExpense(editId, { date, category, amount, comment });
-        el('expenseForm').reset(); el('date').value=todayIso(); el('editId').value=''; el('saveBtn').textContent='Добавить';
+        el('expenseForm').reset(); el('date').value=todayIso(); el('editId').value=''; el('saveBtn').textContent='Г„Г®ГЎГ ГўГЁГІГј';
       } else {
         addExpense({ date, category, amount, comment });
         el('expenseForm').reset(); el('date').value=todayIso();
@@ -351,13 +351,13 @@
     el('applyFilters').addEventListener('click', ()=>{
       filters.from = el('fromDate').value;
       filters.to = el('toDate').value;
-      filters.category = el('filterCategory').value || 'Все';
+      filters.category = el('filterCategory').value || 'Г‚Г±ГҐ';
       filters.search = el('search').value.trim();
       pagination.page = 1; renderAll();
     });
     el('clearFilters').addEventListener('click', ()=>{
-      el('fromDate').value = ''; el('toDate').value = ''; el('filterCategory').value = 'Все'; el('search').value='';
-      filters = { from:'', to:'', category:'Все', search:'' }; pagination.page=1; renderAll();
+      el('fromDate').value = ''; el('toDate').value = ''; el('filterCategory').value = 'Г‚Г±ГҐ'; el('search').value='';
+      filters = { from:'', to:'', category:'Г‚Г±ГҐ', search:'' }; pagination.page=1; renderAll();
     });
     el('prevPage').addEventListener('click', ()=>{ if(pagination.page>1){ pagination.page--; renderTable(); } });
     el('nextPage').addEventListener('click', ()=>{ const total = applyCurrentFilters(expenses).length; const totalPages = Math.max(1, Math.ceil(total/pagination.perPage)); if(pagination.page<totalPages){ pagination.page++; renderTable(); } });
@@ -368,13 +368,13 @@
     });
     el('importCsvInput').addEventListener('change', async (e)=>{
       const file = e.target.files?.[0]; if(!file) return; const text = await file.text(); const items = parseCsv(text);
-      if(!items.length) return alert('Не удалось прочитать CSV');
-      if(!confirm(`Импортировать ${items.length} записей?`)) return;
+      if(!items.length) return alert('ГЌГҐ ГіГ¤Г Г«Г®Г±Гј ГЇГ°Г®Г·ГЁГІГ ГІГј CSV');
+      if(!confirm(`Г€Г¬ГЇГ®Г°ГІГЁГ°Г®ГўГ ГІГј ${items.length} Г§Г ГЇГЁГ±ГҐГ©?`)) return;
       for(const it of items){ addExpense(it); }
     });
     el('resetAllBtn').addEventListener('click', resetAll);
 
-    // ====== РЕНДЕР ВСЕГО ======
+    // ====== ГђГ…ГЌГ„Г…Гђ Г‚Г‘Г…ГѓГЋ ======
     function renderAll(){
       buildCategorySelects();
       renderCards();
